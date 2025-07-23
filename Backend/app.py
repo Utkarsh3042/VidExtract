@@ -6,7 +6,7 @@ import uuid
 import tempfile
 
 app = Flask(__name__)
-CORS(app)  # allow React frontend to communicate
+CORS(app, origins="*")  # allow React frontend to communicate
 
 @app.route('/api/download', methods=['POST'])
 def download_video():
@@ -37,4 +37,4 @@ def download_video():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)
