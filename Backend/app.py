@@ -1,5 +1,7 @@
 from flask import Flask, request, send_file, jsonify
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import yt_dlp
 import os
 import uuid
@@ -8,7 +10,15 @@ import tempfile
 app = Flask(__name__)
 CORS(app, origins="*")  # allow React frontend to communicate
 
+# Add rate limiter: 1 request per minute per IP
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["1 per minute"]
+)
+
 @app.route('/api/download', methods=['POST'])
+@limiter.limit("1 per minute")  # Optional: per-route limit
 def download_video():
     data = request.get_json()
     url = data.get('url')
