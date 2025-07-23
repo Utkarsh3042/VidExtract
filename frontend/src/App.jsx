@@ -37,10 +37,23 @@ function App() {
       const blob = new Blob([response.data], { type: 'video/mp4' });
       const downloadUrl = window.URL.createObjectURL(blob);
 
+      // Try to get filename from Content-Disposition header
+      let filename = "video.mp4";
+      const disposition = response.headers['content-disposition'];
+      if (disposition && disposition.includes('filename=')) {
+        filename = disposition
+          .split('filename=')[1]
+          .split(';')[0]
+          .replace(/['"]/g, '')
+          .trim();
+      }
+
       const link = document.createElement('a');
       link.href = downloadUrl;
-      link.download = 'video.mp4';
+      link.download = filename;
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
 
       window.URL.revokeObjectURL(downloadUrl);
     } catch (error) {
