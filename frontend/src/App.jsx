@@ -10,7 +10,7 @@ function App() {
   const placeholders = [
     "Paste video URL...",
     "Try a YouTube link!",
-    "Paste a Vimeo or Facebook video URL...",
+    "Paste Facebook video URL...",
     "Supports Instagram Reels too!",
     "Paste Pinterest video URL...",
   ];
