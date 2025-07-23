@@ -18,20 +18,25 @@ def download_video():
 
     try:
         temp_dir = tempfile.gettempdir()
-        filename = f"{uuid.uuid4()}.mp4"
-        filepath = os.path.join(temp_dir, filename)
+        outtmpl = os.path.join(temp_dir, '%(title)s.%(ext)s')
 
         ydl_opts = {
             'format': 'bestvideo+bestaudio/best',
-            'outtmpl': filepath,
+            'outtmpl': outtmpl,
             'merge_output_format': 'mp4',
             'quiet': True
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([url])
+            result = ydl.extract_info(url, download=True)
+            # Get the actual filename
+            filename = ydl.prepare_filename(result)
+            # If merged, extension might be .mp4
+            if 'requested_downloads' in result:
+                ext = result['ext']
+                filename = filename.rsplit('.', 1)[0] + '.' + ext
 
-        return send_file(filepath, as_attachment=True, download_name=filename)
+        return send_file(filename, as_attachment=True, download_name=os.path.basename(filename))
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
