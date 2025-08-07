@@ -4,7 +4,7 @@ import './App.css';
 
 const API_ENDPOINT = import.meta.env.VITE_APP_API_ENDPOINT
 
-console.log(API_ENDPOINT)
+//console.log(API_ENDPOINT)
 
 function App() {
   const [url, setUrl] = useState('');
