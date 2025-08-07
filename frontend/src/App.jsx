@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 
+const API_ENDPOINT = import.meta.env.VITE_APP_API_ENDPOINT
+
+console.log(API_ENDPOINT)
+
 function App() {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -29,7 +33,7 @@ function App() {
 
     setLoading(true);
     try {
-      const response = await axios.post('https://vidextract-backend.onrender.com/api/download',
+      const response = await axios.post(`${API_ENDPOINT}/api/download`,
         { url },
         { responseType: 'blob' }
       );
